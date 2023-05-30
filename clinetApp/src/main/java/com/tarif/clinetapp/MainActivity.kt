@@ -1,8 +1,10 @@
 package com.tarif.clinetapp
 
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.KeyEventDispatcher.Component
 import com.tarif.clinetapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -15,12 +17,14 @@ class MainActivity : AppCompatActivity() {
         with(binding) {
             setContentView(root)
             btnOpen.setOnClickListener {
-                Intent().also { intent ->
-                    intent.action = "com.tarif.serverapp.APP_TO_APP"
-                    intent.putExtra("amount","100")
-                    intent.putExtra("trans","SALE")
-                    intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-                    sendBroadcast(intent)
+                Intent(Intent.ACTION_MAIN).also {
+                    it.addCategory("com.tarif.serverapp.APP_TO_APP")
+                    it.component = ComponentName("com.tarif.serverapp","com.tarif.serverapp.MainActivity")
+                    it.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                    it.putExtra("amount","1000")
+                    it.putExtra("trans","SALE")
+                }.let {
+                    startActivity(it)
                 }
             }
         }
